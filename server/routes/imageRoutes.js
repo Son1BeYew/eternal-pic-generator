@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   generateScene,
+  editImage,
   getTrending,
   getUserScenes,
   getScene,
@@ -11,6 +12,7 @@ const {
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/generate', protect, generateScene);
+router.post('/edit', protect, editImage);
 
 // Trending images (public)
 router.get('/trending', getTrending);

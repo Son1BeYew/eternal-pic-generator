@@ -9,10 +9,10 @@ const navItems = [
     label: "Tính năng",
     hasDropdown: true,
     items: [
-      { label: "Quản lý dự án", href: "#" },
-      { label: "Thư viện ảnh", href: "#" },
-      { label: "Preset & Chỉnh sửa", href: "#" },
-      { label: "Báo cáo", href: "#" },
+      { label: "Quản lý dự án", href: "/features/project-management" },
+      { label: "Thư viện ảnh", href: "/features/image-library" },
+      { label: "Preset & Chỉnh sửa", href: "/features/presets-editing" },
+      { label: "Báo cáo", href: "/features/reports" },
     ],
   },
   {
@@ -100,13 +100,13 @@ export default function Header() {
               {item.hasDropdown && openDropdown === item.label && (
                 <div className="ep-header__dropdown absolute left-0 top-full z-50 mt-2 min-w-[180px] animate-fade-in rounded-xl border border-black/5 bg-white p-2 shadow-[0_10px_40px_rgba(0,0,0,0.1)]">
                   {item.items?.map((subItem) => (
-                    <a
+                    <Link
                       key={subItem.label}
                       href={subItem.href}
                       className="ep-header__dropdown-item block rounded-lg px-3 py-2 text-sm text-slate-600 transition-all duration-150 hover:bg-slate-100 hover:text-slate-900"
                     >
                       {subItem.label}
-                    </a>
+                    </Link>
                   ))}
                 </div>
               )}

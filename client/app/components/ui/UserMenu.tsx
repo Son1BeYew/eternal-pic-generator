@@ -14,7 +14,12 @@ export default function UserMenu() {
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("Tiếng Việt");
   const [mounted, setMounted] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 }); // Will be calculated from bottom-left
+  const [isDragging, setIsDragging] = useState(false);
+  const [hasDragged, setHasDragged] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -30,6 +35,22 @@ export default function UserMenu() {
     if (savedLanguage) {
       setSelectedLanguage(savedLanguage);
     }
+
+    // Load saved position or set default (bottom-left: 16px from left, 16px from bottom)
+    const savedPosition = localStorage.getItem("userMenuPosition");
+    if (savedPosition) {
+      try {
+        const pos = JSON.parse(savedPosition);
+        setPosition(pos);
+      } catch (e) {
+        console.error("Error loading user menu position:", e);
+        // Default: bottom-left
+        setPosition({ x: 16, y: window.innerHeight - 56 });
+      }
+    } else {
+      // Default: bottom-left (16px from left, 16px from bottom)
+      setPosition({ x: 16, y: window.innerHeight - 56 });
+    }
   }, []);
 
   useEffect(() => {
@@ -42,6 +63,121 @@ export default function UserMenu() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Only allow dragging from the button, not when clicking on menu
+    if (showMenu) {
+      setShowMenu(false);
+      return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+    setHasDragged(false); // Reset drag flag
+    setIsDragging(true);
+    const rect = buttonRef.current?.getBoundingClientRect();
+    if (rect) {
+      // Calculate offset from mouse position to button's top-left corner
+      setDragStart({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      e.preventDefault();
+      setHasDragged(true);
+
+      // Calculate new position based on mouse position minus the offset
+      const newX = e.clientX - dragStart.x;
+      const newY = e.clientY - dragStart.y;
+
+      // Constrain to viewport
+      const buttonWidth = buttonRef.current?.offsetWidth || 40;
+      const buttonHeight = buttonRef.current?.offsetHeight || 40;
+      const maxX = window.innerWidth - buttonWidth;
+      const maxY = window.innerHeight - buttonHeight;
+
+      setPosition({
+        x: Math.max(0, Math.min(newX, maxX)),
+        y: Math.max(0, Math.min(newY, maxY)),
+      });
+    };
+
+    const snapToCorner = (x: number, y: number) => {
+      const buttonWidth = buttonRef.current?.offsetWidth || 40;
+      const buttonHeight = buttonRef.current?.offsetHeight || 40;
+      const padding = 16; // 16px padding from edges
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      // Calculate distances to each corner
+      const distances = {
+        topLeft: Math.sqrt(x ** 2 + y ** 2),
+        topRight: Math.sqrt((viewportWidth - x - buttonWidth) ** 2 + y ** 2),
+        bottomLeft: Math.sqrt(
+          x ** 2 + (viewportHeight - y - buttonHeight) ** 2
+        ),
+        bottomRight: Math.sqrt(
+          (viewportWidth - x - buttonWidth) ** 2 +
+            (viewportHeight - y - buttonHeight) ** 2
+        ),
+      };
+
+      // Find the closest corner
+      const closestCorner = Object.entries(distances).reduce((a, b) =>
+        distances[a[0] as keyof typeof distances] <
+        distances[b[0] as keyof typeof distances]
+          ? a
+          : b
+      )[0] as keyof typeof distances;
+
+      // Snap to the closest corner
+      switch (closestCorner) {
+        case "topLeft":
+          return { x: padding, y: padding };
+        case "topRight":
+          return { x: viewportWidth - buttonWidth - padding, y: padding };
+        case "bottomLeft":
+          return { x: padding, y: viewportHeight - buttonHeight - padding };
+        case "bottomRight":
+          return {
+            x: viewportWidth - buttonWidth - padding,
+            y: viewportHeight - buttonHeight - padding,
+          };
+        default:
+          return { x: padding, y: viewportHeight - buttonHeight - padding };
+      }
+    };
+
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        // Snap to nearest corner and save position
+        setPosition((currentPos) => {
+          const snappedPos = snapToCorner(currentPos.x, currentPos.y);
+          localStorage.setItem("userMenuPosition", JSON.stringify(snappedPos));
+          return snappedPos;
+        });
+
+        // Reset hasDragged after a short delay
+        setTimeout(() => setHasDragged(false), 100);
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, dragStart]);
 
   const handleLogout = () => {
     logout();
@@ -58,18 +194,21 @@ export default function UserMenu() {
   };
 
   const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    if (!name) return "U";
+    return name.trim()[0].toUpperCase();
   };
 
   if (!mounted || !isLoggedIn) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50" ref={menuRef}>
+    <div
+      className="fixed z-50"
+      ref={menuRef}
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+      }}
+    >
       {/* Dropdown Menu */}
       {showMenu && (
         <div className="absolute bottom-full left-0 mb-2 w-64 animate-fade-in rounded-xl border border-slate-200 bg-white shadow-lg">
@@ -159,9 +298,13 @@ export default function UserMenu() {
                   Ngôn ngữ
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-500">{selectedLanguage}</span>
+                  <span className="text-xs text-slate-500">
+                    {selectedLanguage}
+                  </span>
                   <svg
-                    className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${showLanguageMenu ? "rotate-180" : ""}`}
+                    className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${
+                      showLanguageMenu ? "rotate-180" : ""
+                    }`}
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -257,28 +400,22 @@ export default function UserMenu() {
 
       {/* User Button */}
       <button
-        onClick={() => setShowMenu(!showMenu)}
-        className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2.5 shadow-md transition-all duration-200 hover:border-slate-300 hover:shadow-lg active:scale-95"
+        ref={buttonRef}
+        onMouseDown={handleMouseDown}
+        onClick={(e) => {
+          // Only toggle menu if not dragging and not just finished dragging
+          if (!isDragging && !hasDragged) {
+            setShowMenu(!showMenu);
+          }
+        }}
+        className={`flex h-10 w-10 cursor-move items-center justify-center rounded-full border border-slate-200 bg-white shadow-md transition-all duration-200 hover:border-slate-300 hover:shadow-lg ${
+          isDragging ? "scale-105 shadow-xl" : "active:scale-95"
+        }`}
+        aria-label="User menu"
       >
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white pointer-events-none">
           {getInitials(userName)}
         </div>
-        <span className="max-w-[150px] truncate text-sm font-medium text-slate-900">
-          {userName}
-        </span>
-        <svg
-          className={`h-4 w-4 text-slate-600 transition-transform duration-200 ${showMenu ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth="2.5"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
       </button>
     </div>
   );

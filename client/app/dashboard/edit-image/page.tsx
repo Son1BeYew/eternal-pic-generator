@@ -271,7 +271,87 @@ export default function EditImagePage() {
     setIsResizing(false);
   };
 
-  const handleApplyEdit = async () => {
+  // Helper function to convert image URL to base64 using Image element
+  // Returns null if conversion fails (will use URL instead)
+  const imageUrlToBase64 = async (url: string): Promise<string | null> => {
+    // If already base64, return as is
+    if (url.startsWith('data:image')) {
+      return url;
+    }
+
+    return new Promise((resolve) => {
+      // Try using the existing image element first (if it's already loaded)
+      const existingImg = imageRef.current;
+      if (existingImg && existingImg.src === url && existingImg.complete) {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = existingImg.naturalWidth;
+          canvas.height = existingImg.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          
+          if (ctx) {
+            ctx.drawImage(existingImg, 0, 0);
+            const base64 = canvas.toDataURL('image/png');
+            resolve(base64);
+            return;
+          }
+        } catch (error) {
+          console.warn('Cannot use existing image element (may be CORS), will use URL instead');
+          // Continue to try new Image element
+        }
+      }
+
+      // Use new Image element with CORS
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      const timeout = setTimeout(() => {
+        console.warn('Image load timeout, will use URL instead');
+        resolve(null); // Return null to indicate failure, caller will use URL
+      }, 5000); // 5 second timeout (reduced from 10)
+      
+      img.onload = () => {
+        clearTimeout(timeout);
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          const ctx = canvas.getContext('2d');
+          
+          if (!ctx) {
+            console.warn('Cannot create canvas context, will use URL instead');
+            resolve(null);
+            return;
+          }
+          
+          ctx.drawImage(img, 0, 0);
+          const base64 = canvas.toDataURL('image/png');
+          resolve(base64);
+        } catch (error: any) {
+          // CORS or tainted canvas issue - this is expected for cross-origin images
+          console.warn('Cannot convert image to base64 (CORS/tainted canvas), will use URL instead');
+          resolve(null); // Return null instead of rejecting
+        }
+      };
+      
+      img.onerror = () => {
+        clearTimeout(timeout);
+        // This is expected for some URLs due to CORS - not an error, just use URL instead
+        console.warn('Image load failed (likely CORS), will use URL instead');
+        resolve(null); // Return null instead of rejecting
+      };
+      
+      img.src = url;
+    });
+  };
+
+  const handleApplyEdit = async (e?: React.MouseEvent) => {
+    // Prevent form submission and page refresh
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     console.log('handleApplyEdit called', { 
       hasCanvasDrawing, 
       editPrompt: editPrompt.trim(),
@@ -281,6 +361,7 @@ export default function EditImagePage() {
     // Allow if there's either a prompt or canvas drawing
     if (!editPrompt.trim() && !hasCanvasDrawing) {
       console.log('Blocked: no prompt and no drawing');
+      setError("Vui lòng nhập mô tả chỉnh sửa hoặc vẽ trên ảnh");
       return;
     }
 
@@ -288,6 +369,21 @@ export default function EditImagePage() {
     setError(null);
 
     try {
+      // Convert original image to base64 if it's a URL
+      let baseImageBase64: string | null = originalImage;
+      let useImageUrl = false; // Flag to use URL instead of base64
+      
+      if (originalImage && !originalImage.startsWith('data:image')) {
+        const convertedBase64 = await imageUrlToBase64(originalImage);
+        if (convertedBase64) {
+          baseImageBase64 = convertedBase64;
+        } else {
+          // Conversion failed (likely CORS), will send URL to server
+          useImageUrl = true;
+          baseImageBase64 = null;
+        }
+      }
+
       let mergedImageBase64 = null;
       
       // Merge canvas drawing with original image if there are drawings
@@ -297,26 +393,43 @@ export default function EditImagePage() {
       console.log('Canvas and image refs:', { canvas: !!canvas, image: !!image, hasCanvasDrawing });
       
       if (canvas && image && hasCanvasDrawing) {
-        // Create a temporary canvas to merge image + drawings
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tempCtx = tempCanvas.getContext('2d');
-        
-        if (tempCtx) {
-          // Draw original image
-          tempCtx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        try {
+          // Create a temporary canvas to merge image + drawings
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          const tempCtx = tempCanvas.getContext('2d');
           
-          // Draw canvas overlay (drawings/text)
-          tempCtx.drawImage(canvas, 0, 0);
-          
-          // Convert to base64
-          mergedImageBase64 = tempCanvas.toDataURL('image/png');
-          
-          console.log('Merged image created, length:', mergedImageBase64.length);
-          
-          // Clear canvas after merging
-          clearCanvas();
+          if (tempCtx) {
+            // Load image with crossOrigin to avoid tainted canvas
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            await new Promise((resolve, reject) => {
+              img.onload = () => {
+                // Draw original image
+                tempCtx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                
+                // Draw canvas overlay (drawings/text)
+                tempCtx.drawImage(canvas, 0, 0);
+                
+                // Convert to base64
+                mergedImageBase64 = tempCanvas.toDataURL('image/png');
+                
+                console.log('Merged image created, length:', mergedImageBase64.length);
+                
+                // Clear canvas after merging
+                clearCanvas();
+                resolve(true);
+              };
+              img.onerror = reject;
+              img.src = baseImageBase64;
+            });
+          }
+        } catch (canvasError: any) {
+          console.warn('Error merging canvas, using original image:', canvasError);
+          // If canvas merge fails, just use the base image
+          mergedImageBase64 = null;
         }
       }
 
@@ -328,39 +441,77 @@ export default function EditImagePage() {
         return;
       }
 
-      // Generate new image with AI
+      // Edit image with AI using edit endpoint
       if (editPrompt.trim()) {
-        console.log('Generating with AI...');
+        console.log('Editing image with AI...');
         
-        // Combine original prompt with edit instructions
-        const combinedPrompt = `${originalPrompt}. ${editPrompt}`;
+        // Use merged image if available, otherwise use original base64 or URL
+        const imageToEdit = mergedImageBase64 || baseImageBase64;
 
+        // Prepare request data - prefer base64, but fallback to URL if base64 conversion failed
         const requestData: any = {
-          prompt: combinedPrompt,
+          originalPrompt: originalPrompt,
+          editPrompt: editPrompt.trim(),
           style: selectedStyle,
         };
 
-        // If we have merged image, send it as base image for editing
-        if (mergedImageBase64) {
-          requestData.baseImage = mergedImageBase64;
-          console.log('Sending base image for editing');
+        if (imageToEdit && imageToEdit.startsWith('data:image')) {
+          // We have base64 image (either merged or original)
+          requestData.baseImage = imageToEdit;
+          console.log('Sending base64 image to server');
+        } else if (useImageUrl && originalImage && !originalImage.startsWith('data:image')) {
+          // Client couldn't convert, send URL and let server handle it
+          requestData.baseImageUrl = originalImage;
+          console.log('Sending image URL to server for conversion');
+        } else {
+          // Last resort: try to use existing imageRef
+          const existingImg = imageRef.current;
+          if (existingImg && existingImg.complete) {
+            try {
+              const tempCanvas = document.createElement('canvas');
+              tempCanvas.width = existingImg.naturalWidth;
+              tempCanvas.height = existingImg.naturalHeight;
+              const ctx = tempCanvas.getContext('2d');
+              if (ctx) {
+                ctx.drawImage(existingImg, 0, 0);
+                requestData.baseImage = tempCanvas.toDataURL('image/png');
+                console.log('Using existing imageRef to create base64');
+              } else {
+                throw new Error('Không thể tạo canvas context');
+              }
+            } catch (canvasError: any) {
+              // If all else fails, send URL
+              requestData.baseImageUrl = originalImage;
+              console.log('Canvas failed, sending URL to server:', canvasError);
+            }
+          } else {
+            throw new Error('Không tìm thấy ảnh để chỉnh sửa');
+          }
         }
 
-        console.log('Request data:', { ...requestData, baseImage: requestData.baseImage ? 'present' : 'none' });
+        console.log('Sending request to server:', {
+          hasBaseImage: !!requestData.baseImage,
+          hasBaseImageUrl: !!requestData.baseImageUrl,
+          editPrompt: requestData.editPrompt,
+        });
 
-        const response = await imageApi.generateScene(requestData);
+        const response = await imageApi.editImage(requestData);
 
-        console.log('Response:', response);
+        console.log('Response from server:', response);
 
-        if (response.success) {
+        if (response && response.success && response.data) {
           setEditedImage(response.data.imageUrl);
           setEditPrompt("");
           setHasCanvasDrawing(false);
+          setError(null); // Clear any previous errors
+        } else {
+          throw new Error(response?.message || 'Không nhận được phản hồi hợp lệ từ server');
         }
       }
     } catch (err: any) {
       console.error('Error in handleApplyEdit:', err);
-      setError(err.message || "Có lỗi xảy ra khi chỉnh sửa ảnh");
+      const errorMessage = err.response?.data?.message || err.message || "Có lỗi xảy ra khi chỉnh sửa ảnh";
+      setError(errorMessage);
     } finally {
       setIsGenerating(false);
     }
@@ -764,6 +915,7 @@ export default function EditImagePage() {
             )}
 
             <button
+              type="button"
               onClick={handleApplyEdit}
               disabled={(!editPrompt.trim() && !hasCanvasDrawing) || isGenerating}
               className="w-full rounded-lg bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"

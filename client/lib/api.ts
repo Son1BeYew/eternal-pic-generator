@@ -25,53 +25,89 @@ export interface AuthResponse {
   token: string;
 }
 
+// Helper function to parse JSON response safely
+const parseJSONResponse = async (response: Response) => {
+  const contentType = response.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    return await response.json();
+  } else {
+    const text = await response.text();
+    throw new Error(`Server returned non-JSON response: ${text.substring(0, 100)}`);
+  }
+};
+
 export const authApi = {
   async login(data: LoginData): Promise<AuthResponse> {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Login failed');
+      const result = await parseJSONResponse(response);
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Login failed');
+      }
+
+      return result;
+    } catch (error: any) {
+      if (error.message.includes('non-JSON')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng kiểm tra server có đang chạy không.');
+      }
+      throw error;
     }
-
-    return response.json();
   },
 
   async register(data: RegisterData): Promise<AuthResponse> {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Registration failed');
+      const result = await parseJSONResponse(response);
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Registration failed');
+      }
+
+      return result;
+    } catch (error: any) {
+      if (error.message.includes('non-JSON')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng kiểm tra server có đang chạy không.');
+      }
+      throw error;
     }
-
-    return response.json();
   },
 
   async getMe(token: string): Promise<AuthResponse> {
-    const response = await fetch(`${API_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const response = await fetch(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error('Failed to get user data');
+      const result = await parseJSONResponse(response);
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to get user data');
+      }
+
+      return result;
+    } catch (error: any) {
+      if (error.message.includes('non-JSON')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng kiểm tra server có đang chạy không.');
+      }
+      throw error;
     }
-
-    return response.json();
   },
 };
 
@@ -150,6 +186,41 @@ export const imageApi = {
     }
 
     return response.json();
+  },
+
+  // Edit image with base image and edit prompt
+  async editImage(data: { baseImage?: string; baseImageUrl?: string; originalPrompt: string; editPrompt: string; style?: string }): Promise<SceneResponse> {
+    const token = getAuthToken();
+    
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/images/edit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await parseJSONResponse(response);
+
+      if (!response.ok) {
+        const error: any = new Error(result.message || 'Failed to edit image');
+        error.response = { data: result };
+        throw error;
+      }
+
+      return result;
+    } catch (error: any) {
+      if (error.message && error.message.includes('non-JSON')) {
+        throw new Error('Không thể kết nối đến server. Vui lòng kiểm tra server có đang chạy không.');
+      }
+      throw error;
+    }
   },
 
   // All image generation types use the same endpoint

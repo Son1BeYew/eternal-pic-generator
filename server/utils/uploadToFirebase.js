@@ -1,5 +1,5 @@
-const { bucket } = require('../config/firebase');
-const { v4: uuidv4 } = require('uuid');
+const { bucket } = require("../config/firebase");
+const { v4: uuidv4 } = require("uuid");
 
 /**
  * Upload base64 image to Firebase Storage
@@ -7,11 +7,17 @@ const { v4: uuidv4 } = require('uuid');
  * @param {string} folder - Folder name in storage (e.g., 'scenes', 'avatars')
  * @returns {Promise<string>} - Public URL of uploaded image
  */
-const uploadBase64ToFirebase = async (base64Data, folder = 'images') => {
+const uploadBase64ToFirebase = async (base64Data, folder = "images") => {
   try {
+    if (!bucket) {
+      throw new Error(
+        "Firebase Storage is not initialized. Please configure Firebase credentials."
+      );
+    }
+
     // Remove data URL prefix if exists
-    const base64Image = base64Data.replace(/^data:image\/\w+;base64,/, '');
-    const buffer = Buffer.from(base64Image, 'base64');
+    const base64Image = base64Data.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(base64Image, "base64");
 
     // Generate unique filename
     const filename = `${folder}/${uuidv4()}.png`;
@@ -20,10 +26,10 @@ const uploadBase64ToFirebase = async (base64Data, folder = 'images') => {
     // Upload to Firebase Storage
     await file.save(buffer, {
       metadata: {
-        contentType: 'image/png',
+        contentType: "image/png",
         metadata: {
           firebaseStorageDownloadTokens: uuidv4(),
-        }
+        },
       },
       public: true,
     });
@@ -34,11 +40,11 @@ const uploadBase64ToFirebase = async (base64Data, folder = 'images') => {
     // Get public URL
     const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
 
-    console.log('Image uploaded to Firebase:', publicUrl);
+    console.log("Image uploaded to Firebase:", publicUrl);
     return publicUrl;
   } catch (error) {
-    console.error('Error uploading to Firebase:', error);
-    throw new Error('Failed to upload image to Firebase Storage');
+    console.error("Error uploading to Firebase:", error);
+    throw new Error("Failed to upload image to Firebase Storage");
   }
 };
 
@@ -49,17 +55,22 @@ const uploadBase64ToFirebase = async (base64Data, folder = 'images') => {
  */
 const deleteFromFirebase = async (imageUrl) => {
   try {
+    if (!bucket) {
+      console.warn("Firebase Storage is not initialized. Cannot delete image.");
+      return false;
+    }
+
     // Extract filename from URL
-    const urlParts = imageUrl.split('/');
-    const filename = urlParts.slice(-2).join('/'); // folder/filename.png
+    const urlParts = imageUrl.split("/");
+    const filename = urlParts.slice(-2).join("/"); // folder/filename.png
 
     const file = bucket.file(filename);
     await file.delete();
 
-    console.log('Image deleted from Firebase:', filename);
+    console.log("Image deleted from Firebase:", filename);
     return true;
   } catch (error) {
-    console.error('Error deleting from Firebase:', error);
+    console.error("Error deleting from Firebase:", error);
     return false;
   }
 };

@@ -1,0 +1,186 @@
+"use client";
+
+import { Header, Footer } from "../../components/layout";
+import UserMenu from "../../components/ui/UserMenu";
+
+export default function ProjectManagementPage() {
+  return (
+    <div className="min-h-screen bg-white text-[#1c1c1c]">
+      <Header />
+      <UserMenu />
+      <div className="relative overflow-hidden pt-20">
+        <div className="relative mx-auto w-full max-w-4xl px-6 pt-16 pb-24 sm:px-10 lg:px-12">
+          {/* Header */}
+          <div className="mb-12">
+            <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+              Quản lý dự án
+            </h1>
+            <p className="mt-4 text-lg text-slate-600">
+              Tài liệu hướng dẫn về tính năng quản lý dự án trong EternalPic
+            </p>
+          </div>
+
+          {/* Content */}
+          <div className="space-y-8">
+            {/* Tổng quan */}
+            <section className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="mb-4 text-2xl font-semibold text-slate-900">
+                Tổng quan
+              </h2>
+              <p className="text-slate-700 leading-7">
+                Tính năng Quản lý dự án giúp bạn tổ chức và quản lý tất cả các
+                dự án ảnh của mình một cách hiệu quả. Bạn có thể tạo nhiều dự
+                án, sắp xếp ảnh theo thư mục, cộng tác với team và theo dõi tiến
+                độ công việc.
+              </p>
+            </section>
+
+            {/* Tính năng chính */}
+            <section className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="mb-4 text-2xl font-semibold text-slate-900">
+                Tính năng chính
+              </h2>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Tổ chức dự án
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Tạo và quản lý nhiều dự án ảnh cùng lúc. Mỗi dự án có thể
+                    chứa nhiều ảnh, được sắp xếp theo thư mục và gắn tags để dễ
+                    dàng tìm kiếm sau này.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Cộng tác nhóm
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Làm việc cùng với team bằng cách chia sẻ dự án và quyền truy
+                    cập. Các thành viên có thể xem, chỉnh sửa hoặc comment trên
+                    ảnh trong thời gian thực.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Lịch sử phiên bản
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Hệ thống tự động lưu lại mọi thay đổi của dự án. Bạn có thể
+                    xem lại lịch sử và khôi phục về bất kỳ phiên bản nào trước
+                    đó nếu cần.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Tìm kiếm thông minh
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Tìm kiếm dự án và ảnh bằng từ khóa, tags, hoặc mô tả. Hệ
+                    thống sử dụng AI để hiểu ngữ cảnh và đưa ra kết quả chính
+                    xác nhất.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Templates & Presets
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Sử dụng các templates có sẵn để khởi tạo dự án nhanh chóng.
+                    Bạn cũng có thể tạo preset riêng để tái sử dụng cho các dự
+                    án tương tự.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="mb-2 text-lg font-medium text-slate-900">
+                    Thống kê & Analytics
+                  </h3>
+                  <p className="text-slate-700 leading-7">
+                    Theo dõi tiến độ dự án với các biểu đồ và báo cáo chi tiết.
+                    Xem số lượng ảnh đã tạo, thời gian sử dụng và hiệu suất của
+                    từng dự án.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Hướng dẫn sử dụng */}
+            <section className="rounded-lg border border-slate-200 bg-white p-6">
+              <h2 className="mb-4 text-2xl font-semibold text-slate-900">
+                Hướng dẫn sử dụng
+              </h2>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="mb-2 font-medium text-slate-900">
+                    Tạo dự án mới
+                  </h4>
+                  <ol className="ml-4 list-decimal space-y-1 text-slate-700">
+                    <li>Vào Dashboard và chọn "Quản lý dự án"</li>
+                    <li>Click nút "Tạo dự án mới"</li>
+                    <li>Điền tên dự án, mô tả và chọn template (nếu có)</li>
+                    <li>Click "Tạo" để hoàn tất</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h4 className="mb-2 font-medium text-slate-900">
+                    Thêm ảnh vào dự án
+                  </h4>
+                  <ol className="ml-4 list-decimal space-y-1 text-slate-700">
+                    <li>Mở dự án bạn muốn thêm ảnh</li>
+                    <li>Click "Thêm ảnh" hoặc kéo thả ảnh vào</li>
+                    <li>Thêm tags và mô tả cho ảnh</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h4 className="mb-2 font-medium text-slate-900">
+                    Chia sẻ dự án với team
+                  </h4>
+                  <ol className="ml-4 list-decimal space-y-1 text-slate-700">
+                    <li>Mở dự án cần chia sẻ</li>
+                    <li>Click "Cài đặt" → "Chia sẻ"</li>
+                    <li>Nhập email thành viên và chọn quyền truy cập</li>
+                    <li>Click "Gửi lời mời"</li>
+                  </ol>
+                </div>
+              </div>
+            </section>
+
+            {/* Lưu ý */}
+            <section className="rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-6">
+              <h2 className="mb-4 text-2xl font-semibold text-slate-900">
+                Lưu ý
+              </h2>
+              <ul className="space-y-2 text-slate-700">
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 text-slate-400">•</span>
+                  <span>
+                    Mỗi tài khoản có thể tạo tối đa số dự án tùy theo gói dịch
+                    vụ
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 text-slate-400">•</span>
+                  <span>
+                    Dữ liệu dự án được đồng bộ tự động trên tất cả thiết bị
+                  </span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 text-slate-400">•</span>
+                  <span>Lịch sử phiên bản được lưu trong 30 ngày</span>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+}
