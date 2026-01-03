@@ -87,7 +87,16 @@ const generateTrendingImage = async (req, res) => {
     }
 
     console.log('Converting buffer to base64...');
-    const base64Image = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+    // Try to detect image format from magic bytes
+    let mimeType = 'image/jpeg'; // Default to JPEG
+    if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) {
+      mimeType = 'image/png';
+    } else if (imageBuffer[0] === 0xFF && imageBuffer[1] === 0xD8) {
+      mimeType = 'image/jpeg';
+    }
+    console.log(`Detected image type: ${mimeType}`);
+    
+    const base64Image = `data:${mimeType};base64,${imageBuffer.toString('base64')}`;
 
     console.log('Uploading to Firebase...');
     const firebaseUrl = await uploadBase64ToFirebase(base64Image, 'trending-generated');
