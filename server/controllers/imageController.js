@@ -156,26 +156,24 @@ const editImageWithGemini = async (
 // @access  Private
 const generateScene = async (req, res) => {
   try {
-    const { prompt, style = "realistic", baseImage } = req.body;
+    const { prompt, style = "realistic", outputType = "normal" } = req.body;
 
-    if (!prompt) {
+    if (!prompt || !prompt.trim()) {
       return res.status(400).json({
         success: false,
         message: "Please provide a prompt",
       });
     }
 
-    const enhancedPrompt = `${prompt}. ${
-      stylePrompts[style] || stylePrompts.realistic
-    }`;
-
-    // If baseImage is provided, edit existing image; otherwise generate new
-    let imageUrl;
-    if (baseImage) {
-      imageUrl = await editImageWithGemini(baseImage, prompt, "", "scenes");
-    } else {
-      imageUrl = await generateImageWithGemini(enhancedPrompt, "scenes");
+    // Enhance prompt with style
+    let enhancedPrompt = `${prompt}. ${stylePrompts[style] || stylePrompts.realistic}`;
+    
+    // If outputType is 360, add instruction for 360-degree panoramic image
+    if (outputType === "360") {
+      enhancedPrompt = `${enhancedPrompt} Create a 360-degree panoramic image that can be viewed in all directions. The image should be a seamless spherical panorama.`;
     }
+
+    const imageUrl = await generateImageWithGemini(enhancedPrompt, "scenes");
 
     const scene = await Scene.create({
       user: req.user._id,

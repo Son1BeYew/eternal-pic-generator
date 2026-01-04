@@ -145,7 +145,7 @@ export const logout = () => {
 export interface GenerateSceneData {
   prompt: string;
   style: string;
-  baseImage?: string; // Optional base64 image for editing
+  outputType?: "normal" | "360"; // Type of output image: normal or 360 degree
 }
 
 export interface SceneResponse {
