@@ -223,8 +223,13 @@ export default function CreateScenePage() {
                   type="button"
                   onClick={() => {
                     if (outputType !== "360") {
-                      // Always show modal first to confirm
-                      setShow360Modal(true);
+                      // If user has Pro/Max plan, switch directly without modal
+                      if (userPlan === "pro" || userPlan === "max") {
+                        setOutputType("360");
+                      } else {
+                        // Show modal for free users to upgrade
+                        setShow360Modal(true);
+                      }
                     }
                   }}
                   className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
