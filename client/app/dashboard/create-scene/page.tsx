@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { imageApi, getUserData } from "@/lib/api";
+import { imageApi, getUserData, setUserData } from "@/lib/api";
 
 const sceneStyles = [
   { id: "realistic", label: "Realistic" },
@@ -98,6 +98,23 @@ export default function CreateScenePage() {
     
     // Navigate to edit page
     window.location.href = '/dashboard/edit-image';
+  };
+
+  const handleUpgrade = () => {
+    // Mock data: Upgrade user to Pro plan
+    const user = getUserData();
+    if (user) {
+      const updatedUser = {
+        ...user,
+        plan: "pro" // Mock upgrade to Pro plan
+      };
+      setUserData(updatedUser);
+      setUserPlan("pro");
+    }
+    
+    // Close modal and set output type to 360°
+    setOutputType("360");
+    setShow360Modal(false);
   };
 
   return (
@@ -428,10 +445,7 @@ export default function CreateScenePage() {
                 </button>
               ) : (
                 <button
-                  onClick={() => {
-                    setShow360Modal(false);
-                    router.push("/pricing");
-                  }}
+                  onClick={handleUpgrade}
                   className="flex-1 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800"
                 >
                   Nâng cấp ngay
