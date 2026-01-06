@@ -6,31 +6,31 @@ export default function ProcessSection() {
           Quy trình
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight">
-          Từ chuẩn bị đến bàn giao, mọi thứ đều minh bạch.
+          Từ ý tưởng đến hình ảnh, chỉ trong vài giây.
         </h2>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           <div className="group rounded-2xl border border-black/10 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg">
             <p className="text-sm font-semibold transition-colors duration-300 group-hover:text-emerald-700">
-              1. Lên kế hoạch
+              1. Nhập mô tả
             </p>
             <p className="mt-3 text-sm text-black/60">
-              Xây dựng brief, chốt lịch trình và phân công ekip.
+              Viết prompt mô tả hình ảnh bạn muốn tạo ra.
             </p>
           </div>
           <div className="group rounded-2xl border border-black/10 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg">
             <p className="text-sm font-semibold transition-colors duration-300 group-hover:text-emerald-700">
-              2. Thực hiện
+              2. AI tạo ảnh
             </p>
             <p className="mt-3 text-sm text-black/60">
-              Chụp với preset chia sẻ và checklist tại hiện trường.
+              Chọn AI model và để công nghệ làm phép màu.
             </p>
           </div>
           <div className="group rounded-2xl border border-black/10 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg">
             <p className="text-sm font-semibold transition-colors duration-300 group-hover:text-emerald-700">
-              3. Bàn giao
+              3. Tải xuống
             </p>
             <p className="mt-3 text-sm text-black/60">
-              Kiểm duyệt, xuất file và gửi với thời hạn rõ ràng.
+              Lưu, chỉnh sửa và chia sẻ tác phẩm của bạn.
             </p>
           </div>
         </div>

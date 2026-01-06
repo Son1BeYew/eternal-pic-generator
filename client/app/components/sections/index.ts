@@ -3,4 +3,5 @@ export { default as FeaturesSection } from "./FeaturesSection";
 export { default as GallerySection } from "./GallerySection";
 export { default as ProcessSection } from "./ProcessSection";
 export { default as SocialConnect } from "./SocialConnect";
+export { default as StatsSection } from "./StatsSection";
 export { default as ContactSection } from "./ContactSection";
