@@ -217,7 +217,7 @@ export default function SocialConnect() {
         }
         
         .animate-marquee {
-          animation: marquee 25s linear infinite;
+          animation: marquee 15s linear infinite;
         }
         
         .animate-marquee:hover {
