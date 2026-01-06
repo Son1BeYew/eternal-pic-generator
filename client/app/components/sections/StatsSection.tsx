@@ -36,7 +36,7 @@ export default function StatsSection() {
       number: 12,
       suffix: "",
       label: "AI Models mạnh mẽ",
-      icon: "🤖",
+      icon: "⚡",
       color: "from-blue-500 to-cyan-500",
       delay: 100,
     },
