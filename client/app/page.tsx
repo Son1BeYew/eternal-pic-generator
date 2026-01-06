@@ -6,6 +6,7 @@ import {
   GallerySection,
   SocialConnect,
   ProcessSection,
+  StatsSection,
   ContactSection,
 } from "./components/sections";
 
@@ -23,6 +24,7 @@ export default function Home() {
             <GallerySection />
             <SocialConnect />
             <ProcessSection />
+            <StatsSection />
             <ContactSection />
           </main>
           <Footer />
