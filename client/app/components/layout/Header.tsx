@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getUserData } from "@/lib/api";
 
 const navItems = [
@@ -44,12 +44,36 @@ const navItems = [
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Check if user is logged in
     const user = getUserData();
     setIsLoggedIn(!!user);
+
+    // Cleanup timeout on unmount
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
   }, []);
+
+  const handleMouseEnter = (label: string) => {
+    // Clear any pending close timeout
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setOpenDropdown(label);
+  };
+
+  const handleMouseLeave = () => {
+    // Add a delay before closing the dropdown
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 200); // 200ms delay
+  };
 
   return (
     <header className="ep-header fixed left-1/2 top-4 z-50 mx-4 flex w-[calc(100%-2rem)] max-w-5xl -translate-x-1/2 items-center justify-between rounded-2xl border border-white/60 bg-white/70 px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)] ring-1 ring-black/[0.03] backdrop-blur-xl transition-all duration-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06)]">
@@ -68,8 +92,8 @@ export default function Header() {
             <div
               key={item.label}
               className="ep-header__nav-wrapper relative"
-              onMouseEnter={() => item.hasDropdown && setOpenDropdown(item.label)}
-              onMouseLeave={() => setOpenDropdown(null)}
+              onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.label)}
+              onMouseLeave={handleMouseLeave}
             >
               {item.hasDropdown ? (
                 <button className="ep-header__nav-item flex items-center gap-1 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:text-slate-900 active:scale-95">
