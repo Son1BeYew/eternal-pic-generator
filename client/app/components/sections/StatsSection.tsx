@@ -28,7 +28,6 @@ export default function StatsSection() {
       number: 50000,
       suffix: "+",
       label: "Hình ảnh được tạo",
-      icon: "🎨",
       color: "from-emerald-500 to-teal-500",
       delay: 0,
     },
@@ -36,7 +35,6 @@ export default function StatsSection() {
       number: 12,
       suffix: "",
       label: "AI Models mạnh mẽ",
-      icon: "⚡",
       color: "from-blue-500 to-cyan-500",
       delay: 100,
     },
@@ -44,7 +42,6 @@ export default function StatsSection() {
       number: 5000,
       suffix: "+",
       label: "Người dùng hài lòng",
-      icon: "⭐",
       color: "from-amber-500 to-orange-500",
       delay: 200,
     },
@@ -52,7 +49,6 @@ export default function StatsSection() {
       number: 99,
       suffix: "%",
       label: "Chất lượng đảm bảo",
-      icon: "✨",
       color: "from-pink-500 to-rose-500",
       delay: 300,
     },
@@ -92,11 +88,9 @@ export default function StatsSection() {
                 className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 transition-opacity duration-500 group-hover:opacity-5`}
               />
 
-              {/* Floating icon */}
-              <div className="relative mb-4 flex justify-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 text-3xl shadow-lg transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-xl">
-                  {stat.icon}
-                </div>
+              {/* Icon indicator */}
+              <div className="relative mb-6 flex justify-center">
+                <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${stat.color} opacity-10 transition-all duration-500 group-hover:scale-110 group-hover:opacity-20`} />
               </div>
 
               {/* Animated number */}
