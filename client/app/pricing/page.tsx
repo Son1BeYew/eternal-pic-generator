@@ -53,9 +53,19 @@ export default function PricingPage() {
           </div>
 
           {/* Pricing Cards */}
-          <div className="pricing-cards-grid mt-16 gap-8">
+          <div 
+            className="mt-16 gap-8"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gridAutoRows: '1fr'
+            }}
+          >
             {/* Free Plan */}
-            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div 
+              className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md"
+              style={{ minHeight: '100%' }}
+            >
               {/* Icon */}
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center">
@@ -191,7 +201,10 @@ export default function PricingPage() {
             </div>
 
             {/* Pro Plan */}
-            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div 
+              className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md"
+              style={{ minHeight: '100%' }}
+            >
               {/* Icon */}
               <div className="mb-4">
                 <div className="flex items-center justify-between">
@@ -453,7 +466,10 @@ export default function PricingPage() {
             </div>
 
             {/* Max Plan - Highlighted */}
-            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border-2 border-blue-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div 
+              className="pricing-card-wrapper relative flex flex-col rounded-2xl border-2 border-blue-200 bg-white p-8 shadow-sm transition-all hover:shadow-md"
+              style={{ minHeight: '100%' }}
+            >
               {/* Icon */}
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center">
