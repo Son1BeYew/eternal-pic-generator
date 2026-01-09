@@ -136,3 +136,15 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Pricing cards equal height fix */
+.pricing-cards-grid {
+  display: grid;
+  grid-auto-rows: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .pricing-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

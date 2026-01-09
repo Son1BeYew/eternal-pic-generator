@@ -53,9 +53,9 @@ export default function PricingPage() {
           </div>
 
           {/* Pricing Cards */}
-          <div className="mt-16 grid gap-8 lg:grid-cols-3">
+          <div className="pricing-cards-grid mt-16 gap-8">
             {/* Free Plan */}
-            <div className="relative rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
               {/* Icon */}
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center">
@@ -75,7 +75,7 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="pricing-card-header">
                 <h3 className="text-xl font-semibold text-slate-900">Free</h3>
                 <p className="mt-1 text-sm text-slate-600">
                   Khám phá EternalPic
@@ -90,13 +90,13 @@ export default function PricingPage() {
 
                 <Link
                   href="/auth"
-                  className="flex h-11 w-full items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-center text-sm font-semibold text-slate-900 transition-all hover:bg-slate-50 hover:border-slate-400 active:scale-[0.98]"
+                  className="flex h-11 w-full items-center justify-center rounded-lg bg-slate-900 px-4 text-center text-sm font-semibold text-white transition-all hover:bg-slate-800 active:scale-[0.98]"
                 >
                   Sử dụng miễn phí
                 </Link>
               </div>
 
-              <div className="mt-8 space-y-4">
+              <div className="pricing-card-features mt-8 grow space-y-4">
                 <div className="flex items-start gap-3">
                   <svg
                     className="h-5 w-5 shrink-0 text-emerald-500 mt-0.5"
@@ -191,7 +191,7 @@ export default function PricingPage() {
             </div>
 
             {/* Pro Plan */}
-            <div className="relative rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
               {/* Icon */}
               <div className="mb-4">
                 <div className="flex items-center justify-between">
@@ -246,7 +246,7 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="pricing-card-header">
                 <h3 className="text-xl font-semibold text-slate-900">Pro</h3>
                 <p className="mt-1 text-sm text-slate-600">
                   Sáng tạo chuyên nghiệp
@@ -288,7 +288,7 @@ export default function PricingPage() {
                 </Link>
               </div>
 
-              <div className="mt-8 space-y-4">
+              <div className="pricing-card-features mt-8 grow space-y-4">
                 <div className="flex items-start gap-3">
                   <svg
                     className="h-5 w-5 shrink-0 text-emerald-500 mt-0.5"
@@ -453,7 +453,7 @@ export default function PricingPage() {
             </div>
 
             {/* Max Plan - Highlighted */}
-            <div className="relative rounded-2xl border-2 border-blue-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
+            <div className="pricing-card-wrapper relative flex flex-col rounded-2xl border-2 border-blue-200 bg-white p-8 shadow-sm transition-all hover:shadow-md">
               {/* Icon */}
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center">
@@ -473,7 +473,7 @@ export default function PricingPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="pricing-card-header">
                 <h3 className="text-xl font-semibold text-slate-900">Max</h3>
                 <p className="mt-1 text-sm font-medium text-blue-600">
                   Giới hạn cao hơn, ưu tiên truy cập
@@ -499,7 +499,7 @@ export default function PricingPage() {
                 </Link>
               </div>
 
-              <div className="mt-8 space-y-4">
+              <div className="pricing-card-features mt-8 grow space-y-4">
                 <div className="flex items-start gap-3">
                   <svg
                     className="h-5 w-5 shrink-0 text-emerald-500 mt-0.5"
