@@ -7,7 +7,7 @@ Contributions are welcome! We appreciate your help in making EternalPic better.
 1. **Fork the Repository**
 
    - Click the "Fork" button on GitHub
-   - Clone your fork: `git clone https://github.com/your-username/eternal-pic-generator.git`
+   - Clone your fork: `git clone https://github.com/Son1BeYew/eternal-pic-generator.git`
 
 2. **Create a Feature Branch**
 
