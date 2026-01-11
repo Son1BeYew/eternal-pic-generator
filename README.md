@@ -20,7 +20,7 @@ AI-powered image generation and editing platform using Google Gemini AI for crea
 - Node.js >= 18.x
 - MongoDB >= 6.x
 - npm or yarn
-- Google Gemini API Key
+- Google Gemini API Key and Replicate
 - Firebase Storage account
 - (Optional) Replicate API Token for advanced features
 - (Optional) Remove.bg API Key for background removal
