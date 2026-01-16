@@ -9,6 +9,17 @@ export default function ImageLibraryPage() {
       <Header />
       <UserMenu />
       <div className="relative overflow-hidden pt-20">
+        {/* Decorative background */}
+        <div className="absolute inset-0 -z-10">
+          {/* Gradient orbs */}
+          <div className="absolute top-20 left-10 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-100/40 to-teal-100/40 blur-3xl" />
+          <div className="absolute top-60 right-10 h-96 w-96 rounded-full bg-gradient-to-br from-blue-100/40 to-cyan-100/40 blur-3xl" />
+          <div className="absolute bottom-20 left-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-teal-100/30 to-emerald-100/30 blur-3xl" />
+          
+          {/* Grid pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]" />
+        </div>
+        
         <div className="relative mx-auto w-full max-w-4xl px-6 pt-16 pb-24 sm:px-10 lg:px-12">
           {/* Header */}
           <div className="mb-12">
