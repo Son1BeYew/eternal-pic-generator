@@ -168,9 +168,10 @@ export default function ImageLibraryPage() {
               </ul>
             </section>
           </div>
+            </div>
           
-          {/* Right Sidebar */}
-          <aside className="hidden lg:block w-80 space-y-6 sticky top-24 self-start">
+            {/* Right Sidebar */}
+            <aside className="hidden lg:block w-80 space-y-6 sticky top-24 self-start">
             {/* Quick Links */}
             <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
               <h3 className="text-sm font-semibold text-slate-900 mb-4">Liên kết nhanh</h3>
@@ -233,11 +234,13 @@ export default function ImageLibraryPage() {
                 </li>
               </ul>
             </div>
-          </aside>
-        </div>
+            </aside>
+          </div>
         </div>
       </div>
-      <Footer />
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
+        <Footer />
+      </div>
     </div>
   );
 }

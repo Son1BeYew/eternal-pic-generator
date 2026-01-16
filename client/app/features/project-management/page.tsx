@@ -192,75 +192,79 @@ export default function ProjectManagementPage() {
               </ul>
             </section>
           </div>
+            </div>
           
-          {/* Right Sidebar */}
-          <aside className="hidden lg:block w-80 space-y-6 sticky top-24 self-start">
-            {/* Quick Links */}
-            <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">Liên kết nhanh</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#tong-quan" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Tổng quan
-                  </a>
-                </li>
-                <li>
-                  <a href="#tinh-nang" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Tính năng chính
-                  </a>
-                </li>
-                <li>
-                  <a href="#huong-dan" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Hướng dẫn sử dụng
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Help Card */}
-            <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 shadow-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white text-lg">
-                  ?
-                </div>
-                <h3 className="text-sm font-semibold text-slate-900">Cần hỗ trợ?</h3>
+            {/* Right Sidebar */}
+            <aside className="hidden lg:block w-80 space-y-6 sticky top-24 self-start">
+              {/* Quick Links */}
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+                <h3 className="text-sm font-semibold text-slate-900 mb-4">Liên kết nhanh</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <a href="#tong-quan" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Tổng quan
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#tinh-nang" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Tính năng chính
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#huong-dan" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Hướng dẫn sử dụng
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <p className="text-sm text-slate-600 mb-4">
-                Liên hệ với đội ngũ hỗ trợ của chúng tôi để được giúp đỡ
-              </p>
-              <button className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors">
-                Liên hệ hỗ trợ
-              </button>
-            </div>
 
-            {/* Related Features */}
-            <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
-              <h3 className="text-sm font-semibold text-slate-900 mb-4">Tính năng liên quan</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a href="/features/image-library" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
-                    → Thư viện ảnh
-                  </a>
-                </li>
-                <li>
-                  <a href="/features/presets-editing" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
-                    → Preset & Chỉnh sửa
-                  </a>
-                </li>
-                <li>
-                  <a href="/features/reports" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
-                    → Báo cáo & Analytics
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </aside>
+              {/* Help Card */}
+              <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 p-6 shadow-sm">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white text-lg">
+                    ?
+                  </div>
+                  <h3 className="text-sm font-semibold text-slate-900">Cần hỗ trợ?</h3>
+                </div>
+                <p className="text-sm text-slate-600 mb-4">
+                  Liên hệ với đội ngũ hỗ trợ của chúng tôi để được giúp đỡ
+                </p>
+                <button className="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors">
+                  Liên hệ hỗ trợ
+                </button>
+              </div>
+
+              {/* Related Features */}
+              <div className="rounded-xl border border-slate-200 bg-white/80 backdrop-blur-sm p-6 shadow-sm">
+                <h3 className="text-sm font-semibold text-slate-900 mb-4">Tính năng liên quan</h3>
+                <ul className="space-y-3">
+                  <li>
+                    <a href="/features/image-library" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
+                      → Thư viện ảnh
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/features/presets-editing" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
+                      → Preset & Chỉnh sửa
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/features/reports" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
+                      → Báo cáo & Analytics
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
-      <Footer />
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-12">
+        <Footer />
+      </div>
     </div>
   );
 }
