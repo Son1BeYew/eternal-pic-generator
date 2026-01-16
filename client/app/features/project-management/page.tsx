@@ -259,7 +259,7 @@ export default function ProjectManagementPage() {
             </div>
           </aside>
         </div>
-        </div>
+      </div>
       <Footer />
     </div>
   );
