@@ -1,9 +1,13 @@
 import SessionOverview from "../ui/SessionOverview";
+import RotatingBackground from "../ui/RotatingBackground";
 
 export default function HeroSection() {
   return (
-    <section className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
-      <div>
+    <section className="relative grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+      {/* Rotating Background Effect */}
+      <RotatingBackground />
+      
+      <div className="relative z-10">
         <p className="animate-fade-in-up text-xs font-semibold uppercase tracking-[0.35em] text-emerald-700">
           Mùa mới
         </p>
@@ -43,7 +47,9 @@ AI của chúng tôi biến trí tưởng tượng của bạn thành hiện th�
           </div>
         </div>
       </div>
-      <SessionOverview />
+      <div className="relative z-10">
+        <SessionOverview />
+      </div>
     </section>
   );
 }
