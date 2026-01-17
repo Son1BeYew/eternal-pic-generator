@@ -1,149 +1,165 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { imageApi } from "@/lib/api";
+
+interface Category {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  href: string;
+  color: string;
+  bgColor: string;
+}
 
 export default function GalleryPage() {
-  const [scenes, setScenes] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  useEffect(() => {
-    loadScenes();
-  }, []);
-
-  const loadScenes = async () => {
-    try {
-      setIsLoading(true);
-      const response = await imageApi.getUserScenes();
-      if (response.success) {
-        setScenes(response.data);
-      }
-    } catch (err: any) {
-      setError(err.message || "Không thể tải ảnh");
-    } finally {
-      setIsLoading(false);
+  const categories: Category[] = [
+    {
+      id: "create-scene",
+      title: "Tạo ảnh từ văn bản",
+      description: "Tạo ảnh từ mô tả văn bản với nhiều phong cách khác nhau",
+      icon: "✨",
+      href: "/dashboard/create-scene",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50 hover:bg-purple-100"
+    },
+    {
+      id: "edit-image",
+      title: "Chỉnh sửa ảnh",
+      description: "Chỉnh sửa ảnh hiện có bằng AI theo mô tả của bạn",
+      icon: "🎨",
+      href: "/dashboard/edit-image",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50 hover:bg-blue-100"
+    },
+    {
+      id: "change-hairstyle",
+      title: "Đổi kiểu tóc",
+      description: "Thử nghiệm các kiểu tóc khác nhau trên ảnh của bạn",
+      icon: "💇",
+      href: "/dashboard/change-hairstyle",
+      color: "text-pink-600",
+      bgColor: "bg-pink-50 hover:bg-pink-100"
+    },
+    {
+      id: "change-outfit",
+      title: "Đổi trang phục",
+      description: "Thay đổi trang phục trong ảnh một cách dễ dàng",
+      icon: "👔",
+      href: "/dashboard/change-outfit",
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50 hover:bg-indigo-100"
+    },
+    {
+      id: "graduation",
+      title: "Ảnh tốt nghiệp",
+      description: "Tạo ảnh tốt nghiệp chuyên nghiệp với áo tốt nghiệp",
+      icon: "🎓",
+      href: "/dashboard/graduation",
+      color: "text-green-600",
+      bgColor: "bg-green-50 hover:bg-green-100"
+    },
+    {
+      id: "enhance",
+      title: "Nâng cao chất lượng",
+      description: "Cải thiện chất lượng và độ phân giải của ảnh",
+      icon: "⚡",
+      href: "/dashboard/enhance",
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-50 hover:bg-yellow-100"
+    },
+    {
+      id: "remove-bg",
+      title: "Xóa phông nền",
+      description: "Tự động xóa phông nền khỏi ảnh của bạn",
+      icon: "🖼️",
+      href: "/dashboard/remove-bg",
+      color: "text-red-600",
+      bgColor: "bg-red-50 hover:bg-red-100"
+    },
+    {
+      id: "trending",
+      title: "Xu hướng",
+      description: "Khám phá và tạo ảnh theo các xu hướng phổ biến",
+      icon: "🔥",
+      href: "/dashboard/trending",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50 hover:bg-orange-100"
     }
-  };
-
-  const handleToggleFavorite = async (id: string) => {
-    try {
-      const response = await imageApi.toggleFavorite(id);
-      if (response.success) {
-        setScenes(scenes.map(scene => 
-          scene._id === id ? { ...scene, isFavorite: response.data.isFavorite } : scene
-        ));
-      }
-    } catch (err) {
-      console.error("Error toggling favorite:", err);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Bạn có chắc muốn xóa ảnh này?")) return;
-    
-    try {
-      await imageApi.deleteScene(id);
-      setScenes(scenes.filter(scene => scene._id !== id));
-    } catch (err) {
-      console.error("Error deleting scene:", err);
-    }
-  };
-
-  const handleDownload = (imageUrl: string) => {
-    const link = document.createElement("a");
-    link.href = imageUrl;
-    link.download = `image-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+  ];
 
   return (
     <DashboardLayout>
       <div className="h-full">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-slate-900">Thư viện của tôi</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Tất cả ảnh bạn đã tạo ({scenes.length} ảnh)
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-slate-900">Thư viện tạo ảnh</h2>
+          <p className="mt-2 text-sm text-slate-600">
+            Chọn loại ảnh bạn muốn tạo hoặc chỉnh sửa
           </p>
         </div>
 
-        {isLoading ? (
-          <div className="flex h-96 items-center justify-center">
-            <div className="text-center">
-              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-slate-300 border-t-slate-900"></div>
-              <p className="mt-4 text-sm text-slate-600">Đang tải...</p>
-            </div>
-          </div>
-        ) : error ? (
-          <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
-        ) : scenes.length === 0 ? (
-          <div className="flex h-96 items-center justify-center">
-            <div className="text-center">
-              <svg className="mx-auto h-16 w-16 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <p className="mt-4 text-sm text-slate-600">Chưa có ảnh nào</p>
-              <p className="mt-1 text-xs text-slate-500">Hãy tạo ảnh đầu tiên của bạn</p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {scenes.map((scene) => (
-              <div
-                key={scene._id}
-                className="group relative rounded-lg border border-slate-200 bg-white overflow-hidden transition-all hover:shadow-lg"
-              >
-                <div className="aspect-square overflow-hidden bg-slate-100">
-                  <img
-                    src={scene.imageUrl}
-                    alt={scene.prompt}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => router.push(category.href)}
+              className={`group relative rounded-xl border-2 border-slate-200 ${category.bgColor} p-6 text-left transition-all hover:border-slate-300 hover:shadow-lg`}
+            >
+              <div className="flex flex-col h-full">
+                <div className="mb-4">
+                  <div className="text-4xl mb-3">{category.icon}</div>
+                  <h3 className={`text-lg font-semibold ${category.color} mb-2`}>
+                    {category.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {category.description}
+                  </p>
                 </div>
                 
-                <div className="absolute top-2 right-2 flex gap-2">
-                  <button
-                    onClick={() => handleToggleFavorite(scene._id)}
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm transition-all hover:bg-white hover:scale-110"
-                  >
-                    <svg
-                      className={`h-5 w-5 ${scene.isFavorite ? 'text-red-500' : 'text-slate-600'}`}
-                      fill={scene.isFavorite ? 'currentColor' : 'none'}
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <div className="mt-auto pt-4">
+                  <div className={`inline-flex items-center gap-2 text-sm font-medium ${category.color} group-hover:gap-3 transition-all`}>
+                    <span>Bắt đầu</span>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
-                  </button>
-                </div>
-
-                <div className="p-4">
-                  <p className="text-xs text-slate-600 line-clamp-2">{scene.prompt}</p>
-                  <div className="mt-3 flex gap-2">
-                    <button
-                      onClick={() => handleDownload(scene.imageUrl)}
-                      className="flex-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
-                    >
-                      Tải xuống
-                    </button>
-                    <button
-                      onClick={() => handleDelete(scene._id)}
-                      className="rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
-                    >
-                      Xóa
-                    </button>
                   </div>
                 </div>
               </div>
-            ))}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-900 text-white text-2xl">
+                💡
+              </div>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                Mẹo sử dụng
+              </h3>
+              <ul className="space-y-2 text-sm text-slate-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-400 mt-0.5">•</span>
+                  <span>Mô tả chi tiết sẽ cho kết quả tốt hơn khi tạo ảnh từ văn bản</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-400 mt-0.5">•</span>
+                  <span>Sử dụng ảnh có độ phân giải cao để có kết quả chỉnh sửa tốt nhất</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-slate-400 mt-0.5">•</span>
+                  <span>Xem lịch sử và yêu thích để quản lý các ảnh đã tạo</span>
+                </li>
+              </ul>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </DashboardLayout>
   );

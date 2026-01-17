@@ -29,6 +29,13 @@ router.get('/facebook/callback',
   socialLoginSuccess
 );
 
+// GitHub Auth
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/github/callback',
+  passport.authenticate('github', { failureRedirect: '/login/failed' }),
+  socialLoginSuccess
+);
+
 router.get('/login/failed', socialLoginFailed);
 
 module.exports = router;

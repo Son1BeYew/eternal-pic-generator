@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/User');
 
 module.exports = function(passport) {
@@ -92,6 +93,47 @@ module.exports = function(passport) {
           facebookId: profile.id,
           username: profile.displayName,
           email: email, // details.email could be null
+          avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : ''
+        };
+
+        user = await User.create(newUser);
+        done(null, user);
+      } catch (err) {
+        console.error(err);
+        done(err, null);
+      }
+    }
+  ));
+
+  // GitHub Strategy
+  passport.use(new GitHubStrategy({
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: "/api/auth/github/callback",
+      scope: ['user:email']
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ githubId: profile.id });
+
+        if (user) {
+          return done(null, user);
+        }
+
+        const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+        if(email) {
+            user = await User.findOne({ email });
+            if(user) {
+                user.githubId = profile.id;
+                await user.save();
+                return done(null, user);
+            }
+        }
+
+        const newUser = {
+          githubId: profile.id,
+          username: profile.username || profile.displayName,
+          email: email,
           avatar: profile.photos && profile.photos[0] ? profile.photos[0].value : ''
         };
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const session = require("express-session");
 const { connectDB, isConnected } = require("./config/db");
 const passport = require("passport");
 
@@ -22,13 +23,22 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+// Session middleware for OAuth
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set to true in production with HTTPS
+}));
+
 // Middleware to check MongoDB connection for database routes
 app.use("/api", (req, res, next) => {
   // Allow health check or non-db routes
   if (
     req.path === "/health" ||
     req.path.startsWith("/auth/google") ||
-    req.path.startsWith("/auth/facebook")
+    req.path.startsWith("/auth/facebook") ||
+    req.path.startsWith("/auth/github")
   ) {
     return next();
   }

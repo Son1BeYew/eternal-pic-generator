@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 export default function SocialConnect() {
+  const [hoveredPlatform, setHoveredPlatform] = useState<string | null>(null);
   const socialPlatforms = [
     {
       name: "Claude",
@@ -20,7 +23,7 @@ export default function SocialConnect() {
       hoverBorder: "group-hover:border-[#10A37F]",
       icon: (
         <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/>
+          <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
         </svg>
       ),
     },
@@ -47,7 +50,7 @@ export default function SocialConnect() {
       hoverBorder: "group-hover:border-[#0081FB]",
       icon: (
         <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 14.586c-1.106 0-2.024-.67-2.801-2.034-.654-1.148-1.188-2.537-2.026-2.537-.895 0-1.377 1.446-2.094 2.746-.76 1.378-1.613 2.935-3.168 2.935-1.555 0-2.408-1.557-3.168-2.935C3.92 11.461 3.438 10.015 2.543 10.015c-.168 0-.332.03-.49.088L1.5 8.897c.335-.12.683-.18 1.043-.18 1.555 0 2.408 1.557 3.168 2.935.717 1.3 1.199 2.746 2.094 2.746.838 0 1.372-1.389 2.026-2.537.777-1.364 1.695-2.975 3.075-2.975 1.38 0 2.298 1.611 3.075 2.975.654 1.148 1.188 2.537 2.026 2.537.895 0 1.377-1.446 2.094-2.746.76-1.378 1.613-2.935 3.168-2.935.36 0 .708.06 1.043.18l-.553 1.206c-.158-.058-.322-.088-.49-.088-.895 0-1.377 1.446-2.094 2.746-.76 1.378-1.613 2.935-3.168 2.935z"/>
+          <path d="M16.0235,4.50341 C17.8529,4.3766 19.267,5.44519 20.2076,6.67737 C21.156,7.91976 21.8094,9.54336 22.1673,11.1394 C22.5251,12.7347 22.6208,14.4504 22.3239,15.9123 C22.0388,17.3161 21.2785,18.9223 19.5568,19.437 C17.9375,19.9211 16.5179,19.2167 15.5052,18.3648 C14.4894,17.5103 13.6292,16.3122 12.953,15.1885 C12.6252,14.6438 12.3272,14.0938 12.0637,13.573 C11.8001,14.0938 11.5021,14.6438 11.1743,15.1885 C10.4981,16.3122 9.63792,17.5103 8.62209,18.3648 C7.60941,19.2167 6.18982,19.9211 4.57048,19.437 C2.84884,18.9223 2.08848,17.3161 1.80341,15.9123 C1.50655,14.4504 1.60217,12.7347 1.95995,11.1394 C2.31789,9.54336 2.97134,7.91976 3.91972,6.67737 C4.86029,5.44519 6.27437,4.3766 8.10383,4.50341 C9.81996636,4.62237364 11.0674829,5.78648603 11.8446591,6.77187041 L12.0637,7.0609 L12.0637,7.0609 L12.2827156,6.77187041 C13.059814,5.78648603 14.3073182,4.62237364 16.0235,4.50341 Z M7.89637,7.49623 C7.47584,7.46708 6.92691,7.6821 6.30436,8.49766 C5.68961,9.30301 5.17981,10.4913 4.88724,11.7959 C4.59453,13.1011 4.5524,14.3747 4.74341,15.3153 C4.90819312,16.126825 5.17222414,16.4173547 5.33536471,16.5186918 L5.40276778,16.5532373 L5.40276778,16.5532373 L5.42973,16.5627 C5.6624,16.6322 6.04382,16.6134 6.69089,16.0691 C7.33482,15.5274 7.99318,14.6564 8.60392,13.6416 C8.87629333,13.1890333 9.12860444,12.7252222 9.35564593,12.2790926 L9.61563301,11.7540754 L9.61563301,11.7540754 L9.8493616,11.25714 L9.8493616,11.25714 L10.0548321,10.7993939 L10.0548321,10.7993939 L10.2300447,10.3919447 L10.2300447,10.3919447 L10.373,10.0459 L10.373,10.0459 C10.2165,9.73315 9.99218,9.32834 9.71032,8.92724 C9.06612,8.01052 8.42073,7.53258 7.89637,7.49623 Z M16.2309,7.49623 C15.7066,7.53258 15.0612,8.01052 14.417,8.92724 C14.1351,9.32834 13.9108,9.73315 13.7543,10.0459 L13.9809584,10.588688 L13.9809584,10.588688 L14.1715556,11.0226741 C14.2058156,11.0990422 14.2412947,11.1772747 14.2779512,11.25714 L14.511686,11.7540754 L14.511686,11.7540754 L14.7716778,12.2790926 C14.9987222,12.7252222 15.2510333,13.1890333 15.5234,13.6416 C16.1341,14.6564 16.7925,15.5274 17.4364,16.0691 C18.0372786,16.5745214 18.4090587,16.6268332 18.6454171,16.576082 L18.6976,16.5627 C18.8279,16.5237 19.1811,16.3141 19.3839,15.3153 C19.5749,14.3747 19.5328,13.1011 19.2401,11.7959 C18.9475,10.4913 18.4377,9.30301 17.8229,8.49766 C17.2004,7.6821 16.6515,7.46708 16.2309,7.49623 Z" fill="#09244B"/>
         </svg>
       ),
     },
@@ -153,55 +156,103 @@ export default function SocialConnect() {
         </h2>
         
         {/* Marquee container with overflow hidden */}
-        <div className="mt-12 relative overflow-hidden">
+        <div className="mt-12 relative">
           {/* Add gradient fade on edges for smooth effect */}
           <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
           <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
           
-          {/* Animated marquee - duplicate items for seamless loop */}
-          <div className="flex animate-marquee hover:pause">
-            {/* First set of icons */}
-            {socialPlatforms.map((platform, index) => (
-              <div
-                key={`${platform.name}-1-${index}`}
-                className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0"
-              >
-                <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg`}>
-                  {platform.icon}
+          {/* Add padding top for modal space */}
+          <div className="pt-24 overflow-hidden">
+            {/* Animated marquee - duplicate items for seamless loop */}
+            <div className="flex animate-marquee hover:pause">
+              {/* First set of icons */}
+              {socialPlatforms.map((platform, index) => (
+                <div
+                  key={`${platform.name}-1-${index}`}
+                  className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0 relative"
+                  onMouseEnter={() => setHoveredPlatform(`${platform.name}-1-${index}`)}
+                  onMouseLeave={() => setHoveredPlatform(null)}
+                >
+                  <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg group-hover:scale-110`}>
+                    {platform.icon}
+                  </div>
+                  <p className="text-sm font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-900">
+                    {platform.name}
+                  </p>
+                  
+                  {/* Hover Modal */}
+                  {hoveredPlatform === `${platform.name}-1-${index}` && (
+                    <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                      <div className={`${platform.bgColor} backdrop-blur-xl bg-white/90 border ${platform.borderColor} rounded-xl px-4 py-2 shadow-xl`}>
+                        <p className={`text-sm font-semibold ${platform.color} whitespace-nowrap`}>
+                          {platform.name}
+                        </p>
+                        {/* Arrow pointing down */}
+                        <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white/90 border-b ${platform.borderColor} border-r ${platform.borderColor} rotate-45`}></div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-900">
-                  {platform.name}
-                </p>
-              </div>
-            ))}
+              ))}
             {/* Second set of icons (duplicate for seamless loop) */}
             {socialPlatforms.map((platform, index) => (
               <div
                 key={`${platform.name}-2-${index}`}
-                className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0"
+                className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0 relative"
+                onMouseEnter={() => setHoveredPlatform(`${platform.name}-2-${index}`)}
+                onMouseLeave={() => setHoveredPlatform(null)}
               >
-                <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg`}>
+                <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg group-hover:scale-110`}>
                   {platform.icon}
                 </div>
                 <p className="text-sm font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-900">
                   {platform.name}
                 </p>
+                
+                {/* Hover Modal */}
+                {hoveredPlatform === `${platform.name}-2-${index}` && (
+                  <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                    <div className={`${platform.bgColor} backdrop-blur-xl bg-white/90 border ${platform.borderColor} rounded-xl px-4 py-2 shadow-xl`}>
+                      <p className={`text-sm font-semibold ${platform.color} whitespace-nowrap`}>
+                        {platform.name}
+                      </p>
+                      {/* Arrow pointing down */}
+                      <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white/90 border-b ${platform.borderColor} border-r ${platform.borderColor} rotate-45`}></div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
             {/* Third set for extra smoothness */}
             {socialPlatforms.map((platform, index) => (
               <div
                 key={`${platform.name}-3-${index}`}
-                className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0"
+                className="group flex flex-col items-center gap-4 mx-8 flex-shrink-0 relative"
+                onMouseEnter={() => setHoveredPlatform(`${platform.name}-3-${index}`)}
+                onMouseLeave={() => setHoveredPlatform(null)}
               >
-                <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg`}>
+                <div className={`flex h-24 w-24 items-center justify-center rounded-full border-2 ${platform.borderColor} ${platform.bgColor} ${platform.color} shadow-sm transition-all duration-300 ${platform.hoverBorder} group-hover:shadow-lg group-hover:scale-110`}>
                   {platform.icon}
                 </div>
                 <p className="text-sm font-medium text-slate-600 transition-colors duration-300 group-hover:text-slate-900">
                   {platform.name}
                 </p>
+                
+                {/* Hover Modal */}
+                {hoveredPlatform === `${platform.name}-3-${index}` && (
+                  <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-50 animate-in fade-in zoom-in-95 duration-200">
+                    <div className={`${platform.bgColor} backdrop-blur-xl bg-white/90 border ${platform.borderColor} rounded-xl px-4 py-2 shadow-xl`}>
+                      <p className={`text-sm font-semibold ${platform.color} whitespace-nowrap`}>
+                        {platform.name}
+                      </p>
+                      {/* Arrow pointing down */}
+                      <div className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white/90 border-b ${platform.borderColor} border-r ${platform.borderColor} rotate-45`}></div>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
+          </div>
           </div>
         </div>
       </div>
