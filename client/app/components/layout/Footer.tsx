@@ -52,7 +52,7 @@ export default function Footer() {
           <div>
             <p className="text-sm font-semibold text-black">Liên hệ</p>
             <ul className="mt-3 space-y-2">
-              <li className="transition-colors duration-300 hover:text-black">hello@eternalpic.co</li>
+              <li className="transition-colors duration-300 hover:text-black">support@eternalpic.com</li>
               <li>+84 000 000 000</li>
               <li>TP. Hồ Chí Minh</li>
             </ul>

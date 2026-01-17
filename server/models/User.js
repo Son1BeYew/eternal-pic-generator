@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
   },
   googleId: String,
   facebookId: String,
+  githubId: String,
   role: {
     type: String,
     enum: ['user', 'admin', 'employee'],
